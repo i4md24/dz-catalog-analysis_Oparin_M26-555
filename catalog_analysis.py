@@ -101,9 +101,38 @@ def duration_in_hours(minutes):
     return f"{minutes // 60}ч {minutes % 60}м"
 
 
+# Этап 2. Условия и match
+def rating_tier(rating):
+    """Категория качества: if/elif + тернарный оператор."""
+    if rating >= 9:
+        return "шедевр"
+    elif rating >= 5:
+        return "хорошо" if rating >= 7 else "средне"
+    else:
+        return "слабо"
+
+
+def decade_label(year):
+    """Метка возраста фильма через match с case _ if ..."""
+    match year:
+        case _ if year > 2020:
+            return "новые"
+        case _ if year >= 2015:
+            return "недавние"
+        case _:
+            return "старые"
+
+
 if __name__ == "__main__":
     print(f"Средняя оценка каталога: {average_rating(movies)}")
     oldest, newest, avg_age = catalog_age_stats(movies)
     print(f"Самый старый фильм: {oldest} лет, самый новый: {newest} лет")
     print(f"Средний возраст каталога: {avg_age} лет")
     print(f"155 минут = {duration_in_hours(155)}")
+
+    print("Категории оценок (границы диапазонов):")
+    for r in (9, 8.9, 7, 6.9, 5, 4.9):
+        print(f"  rating_tier({r}) = {rating_tier(r)}")
+    print("Метки десятилетий (границы диапазонов):")
+    for y in (2024, 2021, 2020, 2015, 2014, 2011):
+        print(f"  decade_label({y}) = {decade_label(y)}")
