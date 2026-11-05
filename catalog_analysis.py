@@ -122,6 +122,39 @@ def decade_label(year):
         case _:
             return "старые"
 
+# Этап 3. Циклы
+def print_non_comedy(movies):
+    """Названия фильмов НЕ из жанра comedy: for + continue."""
+    print("Фильмы, которые НЕ относятся к жанру комедии:")
+    for movie in movies:
+        if "comedy" in movie["genres"]:
+            continue
+        print(f"- {movie['title']}")
+
+
+def first_masterpiece(movies, min_rating=9.0):
+    """Первый фильм с рейтингом выше min_rating: while + break + else."""
+    index = 0
+    found = None
+    while index < len(movies):
+        if movies[index]["rating"] > min_rating:
+            found = movies[index]
+            break
+        index += 1
+    else:
+        print("Шедевров не найдено")
+    return found
+
+
+def count_long_movies(movies, threshold=120):
+    """Количество фильмов длиннее threshold: накопление в цикле for."""
+    count = 0
+    for movie in movies:
+        if movie["duration_min"] > threshold:
+            count += 1
+    return count
+
+
 
 if __name__ == "__main__":
     print(f"Средняя оценка каталога: {average_rating(movies)}")
@@ -136,3 +169,15 @@ if __name__ == "__main__":
     print("Метки десятилетий (границы диапазонов):")
     for y in (2024, 2021, 2020, 2015, 2014, 2011):
         print(f"  decade_label({y}) = {decade_label(y)}")
+
+    print_non_comedy(movies)
+
+    found = first_masterpiece(movies)
+    if found:
+        print(f"Первый шедевр: {found['title']} ({found['rating']})")
+
+    print("Проверка ветки else (каталог без шедевров):")
+    first_masterpiece([m for m in movies if m["rating"] <= 9.0])
+
+    print(f"Фильмов длиннее 120 минут: {count_long_movies(movies)}")
+    print(f"Фильмов длиннее 100 минут: {count_long_movies(movies, 100)}")
