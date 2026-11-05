@@ -180,6 +180,20 @@ def format_report_line(movie):
     )
 
 
+# Этап 5. Списки
+def titles_sorted_by_rating(movies):
+    """Названия по убыванию рейтинга: sorted + key, входной список не меняется."""
+    ordered = sorted(movies, key=lambda movie: movie["rating"], reverse=True)
+    return [movie["title"] for movie in ordered]
+
+
+def top_n_by_rating(movies, n=3):
+    """Топ-n записей (title, rating) — именно кортежи."""
+    ordered = sorted(movies, key=lambda movie: movie["rating"], reverse=True)
+    return [(movie["title"], movie["rating"]) for movie in ordered[:n]]
+
+
+
 if __name__ == "__main__":
     print(f"Средняя оценка каталога: {average_rating(movies)}")
     oldest, newest, avg_age = catalog_age_stats(movies)
@@ -213,3 +227,20 @@ if __name__ == "__main__":
     print("Отчёт по каталогу:")
     for m in movies:
         print(f"  {format_report_line(m)}")
+
+    print("\n--- Списки ---")
+
+    print("Названия по убыванию рейтинга:")
+    for title in titles_sorted_by_rating(movies):
+        print(f"  {title}")
+
+    print(f"\nТоп-3: {top_n_by_rating(movies, 3)}")
+    print(f"Топ-1: {top_n_by_rating(movies, 1)}")
+
+    top_first = top_n_by_rating(movies, 3)[0]
+    print(f"Тип записи в top_n: {type(top_first).__name__}")
+
+    titles_before = [movie["title"] for movie in movies]
+    titles_sorted_by_rating(movies)
+    titles_after = [movie["title"] for movie in movies]
+    print(f"Исходный список не изменён: {titles_before == titles_after}")
