@@ -156,6 +156,30 @@ def count_long_movies(movies, threshold=120):
 
 
 
+# Этап 4. Строки
+def normalize_title(title):
+    """Title Case вручную через срез word[0].upper() + word[1:] (без str.title())."""
+    words = []
+    for word in title.split():
+        words.append(word[0].upper() + word[1:])
+    return " ".join(words)
+
+
+def make_slug(title):
+    """Слаг вида silent-hours через .lower() и .replace()."""
+    return title.lower().replace(" ", "-")
+
+
+def format_report_line(movie):
+    """Единая строка отчёта: f-строка + duration_in_hours, жанры по алфавиту."""
+    genres = ", ".join(sorted(movie["genres"]))
+    duration = duration_in_hours(movie["duration_min"])
+    return (
+        f'"{normalize_title(movie["title"])}" ({movie["year"]}) — '
+        f"{movie['rating']}/10, {duration}, жанры: {genres}"
+    )
+
+
 if __name__ == "__main__":
     print(f"Средняя оценка каталога: {average_rating(movies)}")
     oldest, newest, avg_age = catalog_age_stats(movies)
@@ -181,3 +205,11 @@ if __name__ == "__main__":
 
     print(f"Фильмов длиннее 120 минут: {count_long_movies(movies)}")
     print(f"Фильмов длиннее 100 минут: {count_long_movies(movies, 100)}")
+
+    print(normalize_title("silent hours"))
+    print(make_slug("Silent Hours"))
+    print(format_report_line(movies[7]))
+
+    print("Отчёт по каталогу:")
+    for m in movies:
+        print(f"  {format_report_line(m)}")
