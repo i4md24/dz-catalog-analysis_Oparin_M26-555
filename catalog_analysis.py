@@ -218,6 +218,26 @@ def above_average_ratings(movies):
     return {m["title"]: m["rating"] for m in movies if m["rating"] > average}
 
 
+# Этап 7. Множества
+def all_genres(movies):
+    """Все уникальные жанры через объединение множеств (.update())."""
+    genres = set()
+    for movie in movies:
+        genres.update(movie["genres"])
+    return genres
+
+
+def common_actors(movie1, movie2):
+    """Актеры обоих фильмов через пересечение (&)."""
+    return set(movie1["actors"]) & set(movie2["actors"])
+
+
+def genres_only_in_one(movies_a, movies_b):
+    """Жанры из movies_a без жанров movies_b через разность (-)."""
+    return all_genres(movies_a) - all_genres(movies_b)
+
+
+
 
 if __name__ == "__main__":
     print(f"Средняя оценка каталога: {average_rating(movies)}")
@@ -284,3 +304,17 @@ if __name__ == "__main__":
     print("Фильмы с рейтингом выше среднего:")
     for title, rating in above_average_ratings(movies).items():
         print(f"  {title} — {rating}/10")
+
+    print("\n--- Множества ---")
+
+    print(f"Все жанры каталога: {all_genres(movies)}")
+
+    print("\nОбщие актёры (пересечение):")
+    print(f"  Dune + Comet Racers: {common_actors(movies[0], movies[3])}")
+    print(f"  Kitchen + Last Bakery: {common_actors(movies[1], movies[4])}")
+    print(f"  silent hours + Red Harbor: {common_actors(movies[2], movies[9])}")
+
+    print("\nЖанры одной группы без другой (разность):")
+    print(f"  oslo минус первые пять: {genres_only_in_one(movies[5:6], movies[:5])}")
+    only_a = genres_only_in_one(movies[2:4], movies[4:6])
+    print(f"  silent+Comet минус Bakery+oslo: {only_a}")
