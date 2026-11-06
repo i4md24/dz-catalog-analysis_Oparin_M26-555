@@ -237,6 +237,18 @@ def genres_only_in_one(movies_a, movies_b):
     return all_genres(movies_a) - all_genres(movies_b)
 
 
+# Этап 8. Итераторы и генераторы
+def iter_high_rated(movies, min_rating=8.0):
+    """Лениво отдаёт фильмы с рейтингом не ниже min_rating через yield."""
+    for movie in movies:
+        if movie["rating"] >= min_rating:
+            yield movie
+
+
+def total_duration_above(movies, min_rating=7):
+    """Сумма длительностей фильмов рейтингом выше min_rating: ген. выражение в sum."""
+    return sum(m["duration_min"] for m in movies if m["rating"] > min_rating)
+
 
 
 if __name__ == "__main__":
@@ -318,3 +330,18 @@ if __name__ == "__main__":
     print(f"  oslo минус первые пять: {genres_only_in_one(movies[5:6], movies[:5])}")
     only_a = genres_only_in_one(movies[2:4], movies[4:6])
     print(f"  silent+Comet минус Bakery+oslo: {only_a}")
+
+    print("\n--- Итераторы и генераторы ---")
+
+    print(f"Тип iter_high_rated(movies): {type(iter_high_rated(movies)).__name__}")
+
+    print("\nФильмы с рейтингом не ниже 8.0 (ленивый генератор):")
+    for movie in iter_high_rated(movies):
+        print(format_report_line(movie))
+
+    print("\nГраница включается (min_rating=7.3):")
+    for movie in iter_high_rated(movies, 7.3):
+        print(f"  {movie['title']} — {movie['rating']}")
+
+    total = total_duration_above(movies)
+    print(f"\nСуммарная длительность фильмов с рейтингом выше 7: {total} минут")
