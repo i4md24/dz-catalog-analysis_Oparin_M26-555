@@ -193,6 +193,31 @@ def top_n_by_rating(movies, n=3):
     return [(movie["title"], movie["rating"]) for movie in ordered[:n]]
 
 
+# Этап 6. Словари
+def count_by_genre(movies):
+    """{жанр: количество} вручную через dict.get (без Counter)."""
+    counts = {}
+    for movie in movies:
+        for genre in movie["genres"]:
+            counts[genre] = counts.get(genre, 0) + 1
+    return counts
+
+
+def actor_filmography(movies):
+    """{актер: [названия фильмов]} через dict.get."""
+    filmography = {}
+    for movie in movies:
+        for actor in movie["actors"]:
+            filmography[actor] = filmography.get(actor, []) + [movie["title"]]
+    return filmography
+
+
+def above_average_ratings(movies):
+    """{title: rating} для фильмов выше среднего - генератором словаря."""
+    average = average_rating(movies)
+    return {m["title"]: m["rating"] for m in movies if m["rating"] > average}
+
+
 
 if __name__ == "__main__":
     print(f"Средняя оценка каталога: {average_rating(movies)}")
@@ -244,3 +269,18 @@ if __name__ == "__main__":
     titles_sorted_by_rating(movies)
     titles_after = [movie["title"] for movie in movies]
     print(f"Исходный список не изменён: {titles_before == titles_after}")
+
+    print("\n--- Словари ---")
+
+    print("Фильмы по жанрам:")
+    for genre, count in count_by_genre(movies).items():
+        print(f"  {genre}: {count}")
+
+    print("\nФильмографии актёров:")
+    for actor, titles in actor_filmography(movies).items():
+        print(f"  {actor}: {', '.join(titles)}")
+
+    print(f"\nСредний рейтинг каталога: {average_rating(movies)}")
+    print("Фильмы с рейтингом выше среднего:")
+    for title, rating in above_average_ratings(movies).items():
+        print(f"  {title} — {rating}/10")
